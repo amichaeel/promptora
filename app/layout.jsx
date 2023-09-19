@@ -1,4 +1,6 @@
-import '@styles/globals.css'
+import '@styles/globals.css';
+import Nav from "@components/Nav";
+import Provider from "@components/Provider";
 
 export const metadata = {
     title: "Promptora",
@@ -7,7 +9,7 @@ export const metadata = {
 
 const RootLayout = ( {children} ) => {
   return (
-    <html Lang="en">
+    <html lang="en">
         <body>
             <div className='main'>
                 <div className='gradient'>
@@ -15,6 +17,7 @@ const RootLayout = ( {children} ) => {
             </div>
 
             <main className='app'>
+                <Nav />
                 {children}
             </main>
         </body>
