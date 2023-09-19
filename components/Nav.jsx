@@ -6,16 +6,16 @@ import { useState, useEffect } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 
 const Nav = () => {
-  const isUserLoggedIn = true;
-  const [providers, setProviders] = useState(null);
+  const { data: session } = useSession();
+  const [providers, setProviders] = useState(false);
 
   useEffect(() => {
-    const setProviders = async () => {
+    const setUpProviders = async () => {
       const response = await getProviders();
       setProviders(response)
     }
 
-    setProviders();
+    setUpProviders();
   }, [])
 
   const [toggleDropdown, setToggleDropdown] = useState(false);
@@ -27,30 +27,30 @@ const Nav = () => {
             <p className="logo_text">Promptora</p>
         </Link>
         <div className="sm:flex hidden">
-          {isUserLoggedIn ? (
+          {session?.user ? (
             <div className="flex gap-3 md:gap-5">
               <Link href="/create-prompt" className="black_btn">Create Post</Link>
               <button type="button" onClick={signOut} className="outline_btn">Sign Out</button>
               <Link href="/profile">
-                <Image src="/assets/images/profile.svg" width={37} height={37} className="rounded-full" alt="profile"></Image>
+                <Image src={session?.user?.image} width={37} height={37} className="rounded-full" alt="profile"></Image>
               </Link>
             </div>
           ) : <>
-          {providers && Object.values(providers).map((provider) => {
+          {providers && Object.values(providers).map((provider) =>
             (
               <button type="button" key={provider.name} onClick={() => signIn(provider.id)} className="black_btn">
               Sign In
               </button>
             )
-          })}
+          )}
           </>}
         </div>
 
         {/* Mobile Navigation */}
         <div className="sm:hidden flex relative">
-          {isUserLoggedIn ? (
+          {session?.user ? (
             <div className="flex">
-              <Image src="/assets/images/profile.svg" width={37} height={37} className="rounded-full" alt="profile" onClick={() => setToggleDropdown((prev) => !prev)}></Image>
+              <Image src={session?.user?.image} width={37} height={37} className="rounded-full" alt="profile" onClick={() => setToggleDropdown((prev) => !prev)}></Image>
               {toggleDropdown && (
                 <div className="dropdown">
                   <Link href="/profile" className="dropdown_link" onClick={() => setToggleDropdown(false)}>My Profile</Link>
